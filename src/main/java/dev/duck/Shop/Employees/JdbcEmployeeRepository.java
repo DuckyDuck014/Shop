@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
 @Repository
 public class JdbcEmployeeRepository {
@@ -42,6 +43,27 @@ public class JdbcEmployeeRepository {
         .list();
     }
     //Выбор продавца с максимальным количеством продаж.
+
+    public void createEmployee(Employee employee){
+      var updated = jdbcClient.sql("insert into employee(id,firstName,surName,age,employeePos,employeeGender,maxSales)values(?,?,?,?,?,?,?)")
+      .params(List.of(employee.id(),employee.firstName(),employee.surName(),employee.age(),employee.employeePos(),employee.employeeGender(),employee.maxSales()))
+      .update();
+
+      Assert.state(updated == 1, "Faild to create employee" + employee.firstName());
+
+    }
+    //Создание сотрудника 
+
+
+
+    public void deleteEmployee(Integer id){
+      var updated = jdbcClient.sql("delete from employee where id = :id")
+      .param("id",id)
+      .update();
+
+      Assert.state(updated == 1, "Faild to delete employee" + id);
+    }
+    // Удаление сотрудника
 
 
 }
